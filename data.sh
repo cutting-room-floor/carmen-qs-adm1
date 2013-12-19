@@ -16,9 +16,9 @@ ogr2ogr \
 
 echo "cleaning..."
 echo "
-CREATE TABLE data(id SERIAL PRIMARY KEY, name VARCHAR, geometry GEOMETRY(Geometry, 4326), search VARCHAR, lon FLOAT, lat FLOAT, bounds VARCHAR, area FLOAT);
-INSERT INTO data (id, geometry, name, search)
-	SELECT ogc_fid, st_setsrid(wkb_geometry,4326), qs_a1 AS name, coalesce(qs_a1||','||qs_a1_alt, qs_a1) AS search FROM import;
+CREATE TABLE data(id SERIAL PRIMARY KEY, name VARCHAR, geometry GEOMETRY(Geometry, 4326), search VARCHAR, qs_adm0 VARCHAR, lon FLOAT, lat FLOAT, bounds VARCHAR, area FLOAT);
+INSERT INTO data (id, geometry, name, qs_adm0, search)
+	SELECT ogc_fid, st_setsrid(wkb_geometry,4326), qs_a1 AS name, qs_adm0, coalesce(qs_a1||','||qs_a1_alt, qs_a1) AS search FROM import;
 UPDATE data SET
     lon = st_x(st_pointonsurface(geometry)),
     lat = st_y(st_pointonsurface(geometry)),
@@ -29,8 +29,6 @@ UPDATE data SET area = st_area(st_geogfromwkb(geometry)) where st_within(geometr
 
 echo "exporting..."
 ogr2ogr \
-	-s_srs EPSG:4326 \
-	-t_srs EPSG:900913 \
 	-skipfailures \
 	-f "SQLite" \
 	-nln data \
