@@ -1,0 +1,1 @@
+**Deprecated** The carmen index format has changed significantly since this project was last updated. Please refer to the [carmen docs](github.com/mapbox/carmen) for the lastest instructions on indexing data.
